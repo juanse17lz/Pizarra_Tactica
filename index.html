@@ -120,6 +120,17 @@
             fill: none;
             marker-end: url(#arrowhead);
         }
+        
+        .mode-btn.active {
+            background: #1d4ed8 !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+        }
+        
+        .color-btn.active {
+            border-color: #1d4ed8 !important;
+            border-width: 4px;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
     </style>
 </head>
 <body class="bg-slate-50">
@@ -138,77 +149,103 @@
     <main class="container mx-auto px-4 py-8 md:py-12">
         
         <!-- Tool Container -->
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
-            <div class="flex flex-col md:flex-row">
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8" style="height: calc(100vh - 180px); min-height: 500px;">
+            <div class="flex flex-col md:flex-row h-full">
                 
                 <!-- Desktop Controls Panel -->
-                <div class="hidden md:block w-64 bg-gray-50 p-6 border-r border-gray-200">
+                <div class="hidden md:block w-72 bg-gray-50 p-6 border-r border-gray-200 overflow-y-auto" style="max-height: 800px;">
                     <h2 class="text-lg font-bold text-gray-900 mb-4">Herramientas</h2>
                     
-                    <!-- Add Players -->
-                    <div class="mb-6">
-                        <h3 class="text-sm font-semibold text-gray-700 mb-3">Añadir Fichas</h3>
-                        <div class="space-y-2">
-                            <button onclick="addPlayer('home')" class="w-full bg-blue-500 hover:bg-blue-600 text-white rounded-lg py-2.5 px-4 font-medium transition flex items-center justify-center gap-2">
-                                <span class="w-6 h-6 bg-blue-700 rounded-full border-2 border-white"></span>
-                                Jugador Local
-                            </button>
-                            <button onclick="addPlayer('away')" class="w-full bg-red-500 hover:bg-red-600 text-white rounded-lg py-2.5 px-4 font-medium transition flex items-center justify-center gap-2">
-                                <span class="w-6 h-6 bg-red-700 rounded-full border-2 border-white"></span>
-                                Jugador Visitante
-                            </button>
-                            <button onclick="addPlayer('ball')" class="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 rounded-lg py-2.5 px-4 font-medium transition flex items-center justify-center gap-2">
-                                <span class="w-5 h-5 bg-white rounded-full border-2 border-gray-900"></span>
-                                Pelota
-                            </button>
-                            <button onclick="addPlayer('cone')" class="w-full bg-orange-500 hover:bg-orange-600 text-white rounded-lg py-2.5 px-4 font-medium transition flex items-center justify-center gap-2">
-                                <span class="w-4 h-5 bg-orange-600 border-2 border-white" style="clip-path: polygon(50% 0%, 0% 100%, 100% 100%);"></span>
-                                Cono
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Drawing Tools -->
-                    <div class="mb-6">
-                        <h3 class="text-sm font-semibold text-gray-700 mb-3">Dibujar</h3>
-                        <button id="arrowBtn" onclick="toggleArrowMode()" class="w-full bg-gray-700 hover:bg-gray-800 text-white rounded-lg py-2.5 px-4 font-medium transition">
-                            📍 Dibujar Flecha
-                        </button>
-                    </div>
-                    
-                    <!-- Animation Controls -->
-                    <div class="mb-6">
-                        <h3 class="text-sm font-semibold text-gray-700 mb-3">Animación</h3>
-                        <div class="space-y-2">
-                            <button onclick="saveFrame()" class="w-full bg-green-600 hover:bg-green-700 text-white rounded-lg py-2.5 px-4 font-medium transition">
-                                💾 Guardar Escena
-                            </button>
-                            <button onclick="playAnimation()" class="w-full bg-purple-600 hover:bg-purple-700 text-white rounded-lg py-2.5 px-4 font-medium transition">
-                                ▶️ Reproducir
-                            </button>
-                            <div id="frameCounter" class="text-xs text-gray-600 text-center mt-2">
-                                Escenas guardadas: 0
+                    <!-- Selector de Color -->
+                    <div class="mb-6 p-4 bg-white rounded-lg shadow-sm">
+                        <h3 class="text-xs font-semibold text-gray-700 mb-2">Color Actual</h3>
+                        <div class="flex gap-2">
+                            <div class="relative">
+                                <button onclick="setCurrentColor('#3b82f6')" class="w-10 h-10 rounded-full bg-blue-500 border-4 border-white shadow-md hover:scale-110 transition" id="color-blue"></button>
+                                <span id="color-blue-team" class="absolute -top-1 -right-1 text-xs hidden"></span>
+                            </div>
+                            <div class="relative">
+                                <button onclick="setCurrentColor('#ef4444')" class="w-10 h-10 rounded-full bg-red-500 border-4 border-white shadow-md hover:scale-110 transition" id="color-red"></button>
+                                <span id="color-red-team" class="absolute -top-1 -right-1 text-xs hidden"></span>
+                            </div>
+                            <div class="relative">
+                                <button onclick="setCurrentColor('#22c55e')" class="w-10 h-10 rounded-full bg-green-500 border-4 border-white shadow-md hover:scale-110 transition" id="color-green"></button>
+                                <span id="color-green-team" class="absolute -top-1 -right-1 text-xs hidden"></span>
+                            </div>
+                            <div class="relative">
+                                <button onclick="setCurrentColor('#eab308')" class="w-10 h-10 rounded-full bg-yellow-500 border-4 border-white shadow-md hover:scale-110 transition" id="color-yellow"></button>
+                                <span id="color-yellow-team" class="absolute -top-1 -right-1 text-xs hidden"></span>
                             </div>
                         </div>
+                        <p class="text-xs text-gray-500 mt-2">Aplica a jugadores, conos y flechas</p>
+                        <div id="team-colors-info" class="text-xs mt-2 space-y-1"></div>
                     </div>
                     
-                    <!-- Clear & Reset -->
+                    <!-- Grid 1: Añadir Elementos -->
                     <div class="mb-6">
-                        <button onclick="clearCanvas()" class="w-full bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg py-2.5 px-4 font-medium transition">
-                            🗑️ Limpiar Todo
-                        </button>
+                        <h3 class="text-sm font-semibold text-gray-700 mb-3">1. Añadir Elementos</h3>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="addElement('home')" class="bg-blue-500 hover:bg-blue-600 text-white rounded-lg py-3 px-2 font-medium transition text-sm">
+                                👤 Local
+                            </button>
+                            <button onclick="addElement('away')" class="bg-red-500 hover:bg-red-600 text-white rounded-lg py-3 px-2 font-medium transition text-sm">
+                                👤 Visitante
+                            </button>
+                            <button onclick="addElement('ball')" class="bg-gray-700 hover:bg-gray-800 text-white rounded-lg py-3 px-2 font-medium transition text-sm">
+                                ⚽ Pelota
+                            </button>
+                            <button onclick="addElement('cone')" class="bg-orange-500 hover:bg-orange-600 text-white rounded-lg py-3 px-2 font-medium transition text-sm">
+                                🚧 Cono
+                            </button>
+                        </div>
                     </div>
                     
-                    <!-- Export Button -->
-                    <button onclick="showAdAndExportGIF()" class="btn-primary w-full text-white rounded-lg py-3 px-4 font-bold text-base shadow-lg">
-                        📥 Descargar GIF
-                    </button>
+                    <!-- Grid 2: Herramientas de Edición -->
+                    <div class="mb-6">
+                        <h3 class="text-sm font-semibold text-gray-700 mb-3">2. Herramientas</h3>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="setMode('move')" id="btn-move" class="mode-btn bg-gray-600 hover:bg-gray-700 text-white rounded-lg py-3 px-2 font-medium transition text-sm">
+                                ✋ Mover
+                            </button>
+                            <button onclick="setMode('arrow')" id="btn-arrow" class="mode-btn bg-gray-600 hover:bg-gray-700 text-white rounded-lg py-3 px-2 font-medium transition text-sm">
+                                ➡️ Flecha
+                            </button>
+                            <button onclick="setMode('area')" id="btn-area" class="mode-btn bg-gray-600 hover:bg-gray-700 text-white rounded-lg py-3 px-2 font-medium transition text-sm">
+                                ⬜ Área
+                            </button>
+                            <button onclick="setMode('delete')" id="btn-delete" class="mode-btn bg-red-600 hover:bg-red-700 text-white rounded-lg py-3 px-2 font-medium transition text-sm">
+                                🗑️ Eliminar
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Grid 3: Animación y Exportación -->
+                    <div class="mb-6">
+                        <h3 class="text-sm font-semibold text-gray-700 mb-3">3. Animación</h3>
+                        <div class="grid grid-cols-2 gap-2 mb-3">
+                            <button onclick="saveFrame()" class="bg-green-600 hover:bg-green-700 text-white rounded-lg py-3 px-2 font-medium transition text-sm">
+                                💾 Guardar
+                            </button>
+                            <button onclick="playAnimation()" class="bg-purple-600 hover:bg-purple-700 text-white rounded-lg py-3 px-2 font-medium transition text-sm">
+                                ▶️ Reproducir
+                            </button>
+                            <button onclick="clearCanvas()" class="bg-gray-600 hover:bg-gray-700 text-white rounded-lg py-3 px-2 font-medium transition text-sm">
+                                🗑️ Limpiar
+                            </button>
+                            <button onclick="showAdAndExportGIF()" class="btn-primary text-white rounded-lg py-3 px-2 font-bold shadow-lg text-sm">
+                                📥 GIF
+                            </button>
+                        </div>
+                        <div id="frameCounter" class="text-xs text-gray-600 text-center py-2 bg-white rounded shadow-sm">
+                            Escenas: 0
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Canvas Area -->
-                <div class="flex-1 p-4 md:p-8 canvas-container">
-                    <div class="relative mx-auto" style="max-width: 700px;">
-                        <canvas id="fieldCanvas" class="w-full h-auto rounded-xl shadow-lg border-2 border-gray-200"></canvas>
+                <div class="flex-1 p-4 md:p-8 canvas-container flex items-center justify-center">
+                    <div class="relative w-full h-full flex items-center justify-center">
+                        <canvas id="fieldCanvas" class="rounded-xl shadow-lg border-2 border-gray-200" style="max-width: 100%; max-height: 100%;"></canvas>
                     </div>
                 </div>
             </div>
@@ -217,20 +254,29 @@
         <!-- Mobile Controls (Bottom Fixed) -->
         <div class="mobile-controls md:hidden px-4 py-3">
             <div class="flex items-center gap-2 overflow-x-auto pb-2">
-                <button onclick="addPlayer('home')" class="flex-shrink-0 bg-blue-500 text-white rounded-lg py-2 px-3 text-sm font-medium">
-                    🔵 Local
+                <button onclick="addElement('home')" class="flex-shrink-0 bg-blue-500 text-white rounded-lg py-2 px-3 text-sm font-medium">
+                    👤 Local
                 </button>
-                <button onclick="addPlayer('away')" class="flex-shrink-0 bg-red-500 text-white rounded-lg py-2 px-3 text-sm font-medium">
-                    🔴 Visit.
+                <button onclick="addElement('away')" class="flex-shrink-0 bg-red-500 text-white rounded-lg py-2 px-3 text-sm font-medium">
+                    👤 Visit.
                 </button>
-                <button onclick="addPlayer('ball')" class="flex-shrink-0 bg-yellow-400 text-gray-900 rounded-lg py-2 px-3 text-sm font-medium">
-                    ⚽ Pelota
+                <button onclick="addElement('ball')" class="flex-shrink-0 bg-gray-700 text-white rounded-lg py-2 px-3 text-sm font-medium">
+                    ⚽
                 </button>
-                <button onclick="addPlayer('cone')" class="flex-shrink-0 bg-orange-500 text-white rounded-lg py-2 px-3 text-sm font-medium">
-                    🚧 Cono
+                <button onclick="addElement('cone')" class="flex-shrink-0 bg-orange-500 text-white rounded-lg py-2 px-3 text-sm font-medium">
+                    🚧
                 </button>
-                <button onclick="toggleArrowMode()" class="flex-shrink-0 bg-gray-700 text-white rounded-lg py-2 px-3 text-sm font-medium">
-                    📍 Flecha
+                <button onclick="setMode('move')" class="flex-shrink-0 bg-gray-600 text-white rounded-lg py-2 px-3 text-sm font-medium">
+                    ✋
+                </button>
+                <button onclick="setMode('arrow')" class="flex-shrink-0 bg-gray-600 text-white rounded-lg py-2 px-3 text-sm font-medium">
+                    ➡️
+                </button>
+                <button onclick="setMode('area')" class="flex-shrink-0 bg-gray-600 text-white rounded-lg py-2 px-3 text-sm font-medium">
+                    ⬜
+                </button>
+                <button onclick="setMode('delete')" class="flex-shrink-0 bg-red-600 text-white rounded-lg py-2 px-3 text-sm font-medium">
+                    🗑️
                 </button>
                 <button onclick="saveFrame()" class="flex-shrink-0 bg-green-600 text-white rounded-lg py-2 px-3 text-sm font-medium">
                     💾
@@ -423,537 +469,27 @@
         </div>
     </div>
 
-    <script>
-        // Canvas setup
-        const canvas = document.getElementById('fieldCanvas');
-        const ctx = canvas.getContext('2d');
-        
-        // Set canvas size
-        function resizeCanvas() {
-            const container = canvas.parentElement;
-            const size = Math.min(container.clientWidth, 700);
-            canvas.width = size;
-            canvas.height = size * 0.7; // Aspect ratio for football field
-            drawField();
-            redrawCanvas();
-        }
-        
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-        
-        // Game state
-        let players = [];
-        let arrows = [];
-        let frames = [];
-        let draggedPlayer = null;
-        let isDrawingArrow = false;
-        let arrowStart = null;
-        let currentArrow = null;
-        let arrowMode = false;
-        
-        // Player class
-        class Player {
-            constructor(x, y, type, number = '') {
-                this.x = x;
-                this.y = y;
-                this.type = type; // 'home', 'away', 'ball', 'cone'
-                this.number = number;
-                this.radius = type === 'ball' ? 10 : (type === 'cone' ? 12 : 20);
-            }
-            
-            draw() {
-                ctx.save();
-                
-                if (this.type === 'home') {
-                    // Blue player with 3D effect
-                    const gradient = ctx.createRadialGradient(this.x - 5, this.y - 5, 0, this.x, this.y, this.radius);
-                    gradient.addColorStop(0, '#60a5fa');
-                    gradient.addColorStop(1, '#1d4ed8');
-                    ctx.fillStyle = gradient;
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.strokeStyle = 'white';
-                    ctx.lineWidth = 3;
-                    ctx.stroke();
-                    
-                    // Shadow
-                    ctx.fillStyle = 'rgba(0,0,0,0.2)';
-                    ctx.beginPath();
-                    ctx.ellipse(this.x + 2, this.y + this.radius + 3, this.radius * 0.8, 4, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    
-                } else if (this.type === 'away') {
-                    // Red player with 3D effect
-                    const gradient = ctx.createRadialGradient(this.x - 5, this.y - 5, 0, this.x, this.y, this.radius);
-                    gradient.addColorStop(0, '#f87171');
-                    gradient.addColorStop(1, '#b91c1c');
-                    ctx.fillStyle = gradient;
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.strokeStyle = 'white';
-                    ctx.lineWidth = 3;
-                    ctx.stroke();
-                    
-                    // Shadow
-                    ctx.fillStyle = 'rgba(0,0,0,0.2)';
-                    ctx.beginPath();
-                    ctx.ellipse(this.x + 2, this.y + this.radius + 3, this.radius * 0.8, 4, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    
-                } else if (this.type === 'ball') {
-                    // Soccer ball
-                    const gradient = ctx.createRadialGradient(this.x - 3, this.y - 3, 0, this.x, this.y, this.radius);
-                    gradient.addColorStop(0, 'white');
-                    gradient.addColorStop(1, '#e5e7eb');
-                    ctx.fillStyle = gradient;
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.strokeStyle = '#374151';
-                    ctx.lineWidth = 2;
-                    ctx.stroke();
-                    
-                    // Shadow
-                    ctx.fillStyle = 'rgba(0,0,0,0.15)';
-                    ctx.beginPath();
-                    ctx.ellipse(this.x + 2, this.y + this.radius + 2, this.radius * 0.8, 3, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    
-                } else if (this.type === 'cone') {
-                    // Traffic cone
-                    ctx.fillStyle = '#f97316';
-                    ctx.strokeStyle = 'white';
-                    ctx.lineWidth = 2;
-                    
-                    // Cone shape
-                    ctx.beginPath();
-                    ctx.moveTo(this.x, this.y - 15);
-                    ctx.lineTo(this.x - 10, this.y + 10);
-                    ctx.lineTo(this.x + 10, this.y + 10);
-                    ctx.closePath();
-                    ctx.fill();
-                    ctx.stroke();
-                    
-                    // White stripe
-                    ctx.fillStyle = 'white';
-                    ctx.beginPath();
-                    ctx.moveTo(this.x - 5, this.y);
-                    ctx.lineTo(this.x + 5, this.y);
-                    ctx.lineTo(this.x + 3, this.y + 5);
-                    ctx.lineTo(this.x - 3, this.y + 5);
-                    ctx.closePath();
-                    ctx.fill();
-                    
-                    // Shadow
-                    ctx.fillStyle = 'rgba(0,0,0,0.2)';
-                    ctx.beginPath();
-                    ctx.ellipse(this.x, this.y + 12, 10, 3, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                }
-                
-                ctx.restore();
-            }
-            
-            contains(x, y) {
-                const dx = x - this.x;
-                const dy = y - this.y;
-                return Math.sqrt(dx * dx + dy * dy) <= this.radius + 5;
-            }
-        }
-        
-        // Draw football field with premium pattern
-        function drawField() {
-            // Green field with stripe pattern
-            for (let i = 0; i < canvas.height; i += 40) {
-                ctx.fillStyle = i % 80 === 0 ? '#22a822' : '#2db12d';
-                ctx.fillRect(0, i, canvas.width, 40);
-            }
-            
-            // White lines
-            ctx.strokeStyle = 'white';
-            ctx.lineWidth = 3;
-            
-            // Border
-            ctx.strokeRect(30, 30, canvas.width - 60, canvas.height - 60);
-            
-            // Center line
-            ctx.beginPath();
-            ctx.moveTo(canvas.width / 2, 30);
-            ctx.lineTo(canvas.width / 2, canvas.height - 30);
-            ctx.stroke();
-            
-            // Center circle
-            ctx.beginPath();
-            ctx.arc(canvas.width / 2, canvas.height / 2, 50, 0, Math.PI * 2);
-            ctx.stroke();
-            
-            // Center dot
-            ctx.fillStyle = 'white';
-            ctx.beginPath();
-            ctx.arc(canvas.width / 2, canvas.height / 2, 4, 0, Math.PI * 2);
-            ctx.fill();
-            
-            // Penalty areas
-            const penaltyWidth = 120;
-            const penaltyHeight = 80;
-            
-            // Left penalty area
-            ctx.strokeRect(30, (canvas.height - penaltyHeight) / 2, 60, penaltyHeight);
-            
-            // Right penalty area
-            ctx.strokeRect(canvas.width - 90, (canvas.height - penaltyHeight) / 2, 60, penaltyHeight);
-            
-            // Goal areas
-            const goalWidth = 40;
-            const goalHeight = 50;
-            
-            // Left goal area
-            ctx.strokeRect(30, (canvas.height - goalHeight) / 2, 25, goalHeight);
-            
-            // Right goal area
-            ctx.strokeRect(canvas.width - 55, (canvas.height - goalHeight) / 2, 25, goalHeight);
-            
-            // Penalty spots
-            ctx.fillStyle = 'white';
-            ctx.beginPath();
-            ctx.arc(60, canvas.height / 2, 3, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.beginPath();
-            ctx.arc(canvas.width - 60, canvas.height / 2, 3, 0, Math.PI * 2);
-            ctx.fill();
-        }
-        
-        // Draw arrow
-        function drawArrow(from, to, color = '#ef4444') {
-            ctx.save();
-            ctx.strokeStyle = color;
-            ctx.fillStyle = color;
-            ctx.lineWidth = 4;
-            ctx.lineCap = 'round';
-            
-            // Draw line
-            ctx.beginPath();
-            ctx.moveTo(from.x, from.y);
-            ctx.lineTo(to.x, to.y);
-            ctx.stroke();
-            
-            // Draw arrowhead
-            const angle = Math.atan2(to.y - from.y, to.x - from.x);
-            const headLength = 15;
-            
-            ctx.beginPath();
-            ctx.moveTo(to.x, to.y);
-            ctx.lineTo(
-                to.x - headLength * Math.cos(angle - Math.PI / 6),
-                to.y - headLength * Math.sin(angle - Math.PI / 6)
-            );
-            ctx.lineTo(
-                to.x - headLength * Math.cos(angle + Math.PI / 6),
-                to.y - headLength * Math.sin(angle + Math.PI / 6)
-            );
-            ctx.closePath();
-            ctx.fill();
-            
-            ctx.restore();
-        }
-        
-        // Redraw entire canvas
-        function redrawCanvas() {
-            drawField();
-            
-            // Draw all arrows
-            arrows.forEach(arrow => {
-                drawArrow(arrow.from, arrow.to);
-            });
-            
-            // Draw all players
-            players.forEach(player => {
-                player.draw();
-            });
-            
-            // Draw current arrow being drawn
-            if (isDrawingArrow && arrowStart && currentArrow) {
-                drawArrow(arrowStart, currentArrow, '#ef4444');
-            }
-        }
-        
-        // Add player
-        function addPlayer(type) {
-            const x = canvas.width / 2 + (Math.random() - 0.5) * 100;
-            const y = canvas.height / 2 + (Math.random() - 0.5) * 80;
-            players.push(new Player(x, y, type));
-            redrawCanvas();
-        }
-        
-        // Toggle arrow drawing mode
-        function toggleArrowMode() {
-            arrowMode = !arrowMode;
-            const btn = document.getElementById('arrowBtn');
-            if (btn) {
-                btn.style.background = arrowMode ? '#1f2937' : '#374151';
-            }
-            canvas.style.cursor = arrowMode ? 'crosshair' : 'default';
-        }
-        
-        // Get mouse/touch position
-        function getPosition(e) {
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            
-            return {
-                x: (clientX - rect.left) * scaleX,
-                y: (clientY - rect.top) * scaleY
-            };
-        }
-        
-        // Mouse/Touch events
-        canvas.addEventListener('mousedown', handleStart);
-        canvas.addEventListener('touchstart', handleStart);
-        
-        canvas.addEventListener('mousemove', handleMove);
-        canvas.addEventListener('touchmove', handleMove);
-        
-        canvas.addEventListener('mouseup', handleEnd);
-        canvas.addEventListener('touchend', handleEnd);
-        
-        function handleStart(e) {
-            e.preventDefault();
-            const pos = getPosition(e);
-            
-            if (arrowMode) {
-                isDrawingArrow = true;
-                arrowStart = pos;
-                currentArrow = pos;
-            } else {
-                // Find clicked player
-                for (let i = players.length - 1; i >= 0; i--) {
-                    if (players[i].contains(pos.x, pos.y)) {
-                        draggedPlayer = players[i];
-                        break;
-                    }
-                }
-            }
-        }
-        
-        function handleMove(e) {
-            e.preventDefault();
-            const pos = getPosition(e);
-            
-            if (arrowMode && isDrawingArrow) {
-                currentArrow = pos;
-                redrawCanvas();
-            } else if (draggedPlayer) {
-                draggedPlayer.x = pos.x;
-                draggedPlayer.y = pos.y;
-                redrawCanvas();
-            }
-        }
-        
-        function handleEnd(e) {
-            e.preventDefault();
-            
-            if (arrowMode && isDrawingArrow && arrowStart && currentArrow) {
-                const distance = Math.sqrt(
-                    Math.pow(currentArrow.x - arrowStart.x, 2) + 
-                    Math.pow(currentArrow.y - arrowStart.y, 2)
-                );
-                
-                if (distance > 20) {
-                    arrows.push({
-                        from: { ...arrowStart },
-                        to: { ...currentArrow }
-                    });
-                }
-                
-                isDrawingArrow = false;
-                arrowStart = null;
-                currentArrow = null;
-                redrawCanvas();
-            }
-            
-            draggedPlayer = null;
-        }
-        
-        // Clear canvas
-        function clearCanvas() {
-            if (confirm('¿Deseas limpiar todo? Se perderán las escenas guardadas.')) {
-                players = [];
-                arrows = [];
-                frames = [];
-                updateFrameCounter();
-                redrawCanvas();
-            }
-        }
-        
-        // Animation functions
-        function saveFrame() {
-            const frame = {
-                players: players.map(p => ({ ...p })),
-                arrows: arrows.map(a => ({ ...a }))
-            };
-            frames.push(frame);
-            updateFrameCounter();
-            
-            // Visual feedback
-            const btn = event.target;
-            const originalText = btn.textContent;
-            btn.textContent = '✅ Guardado';
-            btn.style.background = '#059669';
-            setTimeout(() => {
-                btn.textContent = originalText;
-                btn.style.background = '';
-            }, 1000);
-        }
-        
-        function updateFrameCounter() {
-            const counter = document.getElementById('frameCounter');
-            if (counter) {
-                counter.textContent = `Escenas guardadas: ${frames.length}`;
-            }
-        }
-        
-        async function playAnimation() {
-            if (frames.length < 2) {
-                alert('Necesitas guardar al menos 2 escenas para ver la animación.');
-                return;
-            }
-            
-            const steps = 20; // Interpolation steps between frames
-            
-            for (let i = 0; i < frames.length - 1; i++) {
-                const currentFrame = frames[i];
-                const nextFrame = frames[i + 1];
-                
-                for (let step = 0; step <= steps; step++) {
-                    const t = step / steps;
-                    
-                    // Interpolate players
-                    players = currentFrame.players.map((cp, idx) => {
-                        if (nextFrame.players[idx]) {
-                            const np = nextFrame.players[idx];
-                            return new Player(
-                                cp.x + (np.x - cp.x) * t,
-                                cp.y + (np.y - cp.y) * t,
-                                cp.type
-                            );
-                        }
-                        return new Player(cp.x, cp.y, cp.type);
-                    });
-                    
-                    arrows = currentFrame.arrows;
-                    
-                    redrawCanvas();
-                    await new Promise(resolve => setTimeout(resolve, 50));
-                }
-            }
-        }
-        
-        // GIF Export with ad
-        function showAdAndExportGIF() {
-            // Show notification ad
-            const notifAd = document.getElementById('notification-ad');
-            notifAd.classList.remove('hidden');
-            
-            // Show popup ad
-            const popupAd = document.getElementById('popup-ad');
-            popupAd.classList.remove('hidden');
-            
-            // Start GIF generation in background
-            setTimeout(() => {
-                exportGIF();
-            }, 1000);
-        }
-        
-        function closeNotificationAd() {
-            document.getElementById('notification-ad').classList.add('hidden');
-        }
-        
-        function closePopupAd() {
-            document.getElementById('popup-ad').classList.add('hidden');
-        }
-        
-        async function exportGIF() {
-            if (frames.length < 2) {
-                alert('Necesitas guardar al menos 2 escenas para exportar un GIF.');
-                closePopupAd();
-                return;
-            }
-            
-            try {
-                const gif = new GIF({
-                    workers: 2,
-                    quality: 10,
-                    width: canvas.width,
-                    height: canvas.height,
-                    workerScript: 'https://cdn.jsdelivr.net/npm/gif.js@0.2.0/dist/gif.worker.js'
-                });
-                
-                const steps = 15;
-                
-                for (let i = 0; i < frames.length - 1; i++) {
-                    const currentFrame = frames[i];
-                    const nextFrame = frames[i + 1];
-                    
-                    for (let step = 0; step <= steps; step++) {
-                        const t = step / steps;
-                        
-                        // Interpolate and draw frame
-                        players = currentFrame.players.map((cp, idx) => {
-                            if (nextFrame.players[idx]) {
-                                const np = nextFrame.players[idx];
-                                return new Player(
-                                    cp.x + (np.x - cp.x) * t,
-                                    cp.y + (np.y - cp.y) * t,
-                                    cp.type
-                                );
-                            }
-                            return new Player(cp.x, cp.y, cp.type);
-                        });
-                        
-                        arrows = currentFrame.arrows;
-                        redrawCanvas();
-                        
-                        gif.addFrame(canvas, { delay: 100, copy: true });
-                    }
-                }
-                
-                gif.on('finished', function(blob) {
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'jugada-tactica.gif';
-                    a.click();
-                    URL.revokeObjectURL(url);
-                    
-                    setTimeout(() => {
-                        closePopupAd();
-                    }, 2000);
-                });
-                
-                gif.render();
-                
-            } catch (error) {
-                console.error('Error generating GIF:', error);
-                alert('Error al generar el GIF. Por favor intenta de nuevo.');
-                closePopupAd();
-            }
-        }
-        
-        // Show notification ad after 5 seconds
-        setTimeout(() => {
-            document.getElementById('notification-ad').classList.remove('hidden');
-        }, 5000);
-        
-        // Initial draw
-        drawField();
-    </script>
+    <!-- Error/Message Popup -->
+    <div id="message-popup" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 relative">
+            <button onclick="closeMessagePopup()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 font-bold text-2xl leading-none">
+                ✕
+            </button>
+            <div id="message-content" class="text-center">
+                <div id="message-icon" class="text-6xl mb-4">⚠️</div>
+                <h3 id="message-title" class="text-xl font-bold text-gray-900 mb-2">Error</h3>
+                <p id="message-text" class="text-gray-600 mb-6"></p>
+            </div>
+            <div id="message-btn-container" class="mt-6">
+                <button onclick="closeMessagePopup()" class="w-full bg-blue-500 hover:bg-blue-600 text-white rounded-lg py-3 px-4 font-medium transition">
+                    Aceptar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application Script -->
+    <script src="app.js"></script>
 
 </body>
 </html>
