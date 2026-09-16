@@ -496,6 +496,12 @@ function setMode(mode) {
         btn.classList.add('active');
     }
     
+    // Update mobile button
+    const btnMobile = document.getElementById(btnId + '-mobile');
+    if (btnMobile) {
+        btnMobile.classList.add('active');
+    }
+    
     // Update cursor
     if (canvas) {
         switch(mode) {
@@ -519,10 +525,15 @@ function setMode(mode) {
 function setCurrentColor(color) {
     currentColor = color;
     
-    // Update button states
+    // Update button states (desktop and mobile)
     document.querySelectorAll('[id^="color-"]').forEach(btn => {
         btn.classList.remove('active');
-        btn.style.borderColor = 'white'
+        btn.style.borderColor = 'white';
+        if (btn.id.includes('-mobile')) {
+            btn.style.borderWidth = '2px';
+        } else {
+            btn.style.borderWidth = '4px';
+        }
     });
     
     const colorName = {
@@ -532,10 +543,20 @@ function setCurrentColor(color) {
         '#eab308': 'yellow'
     }[color];
     
+    // Update desktop button
     const btn = document.getElementById('color-' + colorName);
     if (btn) {
         btn.classList.add('active');
         btn.style.borderColor = '#1d4ed8';
+        btn.style.borderWidth = '4px';
+    }
+    
+    // Update mobile button
+    const btnMobile = document.getElementById('color-' + colorName + '-mobile');
+    if (btnMobile) {
+        btnMobile.classList.add('active');
+        btnMobile.style.borderColor = '#1d4ed8';
+        btnMobile.style.borderWidth = '3px';
     }
 }
 

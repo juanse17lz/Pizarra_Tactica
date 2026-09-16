@@ -95,6 +95,23 @@
             }
         }
         
+        /* Ocultar scrollbar pero mantener funcionalidad */
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* Smooth scroll para móvil */
+        @media (max-width: 768px) {
+            .mobile-controls {
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+        }
+        
         .canvas-container {
             touch-action: none;
         }
@@ -130,6 +147,19 @@
             border-color: #1d4ed8 !important;
             border-width: 4px;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+        
+        /* Active state for mobile buttons */
+        @media (max-width: 768px) {
+            button[id^="btn-"][id$="-mobile"].active {
+                background: #1d4ed8 !important;
+                box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+            }
+            
+            button[id^="color-"][id$="-mobile"].active {
+                border-width: 3px !important;
+                box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+            }
         }
     </style>
 </head>
@@ -252,41 +282,72 @@
         </div>
 
         <!-- Mobile Controls (Bottom Fixed) -->
-        <div class="mobile-controls md:hidden px-4 py-3">
-            <div class="flex items-center gap-2 overflow-x-auto pb-2">
-                <button onclick="addElement('home')" class="flex-shrink-0 bg-blue-500 text-white rounded-lg py-2 px-3 text-sm font-medium">
+        <div class="mobile-controls md:hidden px-3 py-3">
+            <div class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide" style="scroll-behavior: smooth; -webkit-overflow-scrolling: touch;">
+                
+                <!-- Selector de Colores (Izquierda) -->
+                <div class="flex-shrink-0 flex items-center gap-1 bg-gray-100 rounded-lg px-2 py-1.5 border-r-2 border-gray-300 mr-1">
+                    <button onclick="setCurrentColor('#3b82f6')" class="w-8 h-8 rounded-full bg-blue-500 border-2 border-white shadow-md active:scale-95 transition" id="color-blue-mobile"></button>
+                    <button onclick="setCurrentColor('#ef4444')" class="w-8 h-8 rounded-full bg-red-500 border-2 border-white shadow-md active:scale-95 transition" id="color-red-mobile"></button>
+                    <button onclick="setCurrentColor('#22c55e')" class="w-8 h-8 rounded-full bg-green-500 border-2 border-white shadow-md active:scale-95 transition" id="color-green-mobile"></button>
+                    <button onclick="setCurrentColor('#eab308')" class="w-8 h-8 rounded-full bg-yellow-500 border-2 border-white shadow-md active:scale-95 transition" id="color-yellow-mobile"></button>
+                </div>
+                
+                <!-- Separador visual -->
+                <div class="flex-shrink-0 w-px h-10 bg-gray-300"></div>
+                
+                <!-- Botones de Elementos -->
+                <button onclick="addElement('home')" class="flex-shrink-0 bg-blue-500 text-white rounded-lg py-2 px-3 text-sm font-medium active:scale-95 transition">
                     👤 Local
                 </button>
-                <button onclick="addElement('away')" class="flex-shrink-0 bg-red-500 text-white rounded-lg py-2 px-3 text-sm font-medium">
+                <button onclick="addElement('away')" class="flex-shrink-0 bg-red-500 text-white rounded-lg py-2 px-3 text-sm font-medium active:scale-95 transition">
                     👤 Visit.
                 </button>
-                <button onclick="addElement('ball')" class="flex-shrink-0 bg-gray-700 text-white rounded-lg py-2 px-3 text-sm font-medium">
+                <button onclick="addElement('ball')" class="flex-shrink-0 bg-gray-700 text-white rounded-lg py-2 px-3 text-sm font-medium active:scale-95 transition">
                     ⚽
                 </button>
-                <button onclick="addElement('cone')" class="flex-shrink-0 bg-orange-500 text-white rounded-lg py-2 px-3 text-sm font-medium">
+                <button onclick="addElement('cone')" class="flex-shrink-0 bg-orange-500 text-white rounded-lg py-2 px-3 text-sm font-medium active:scale-95 transition">
                     🚧
                 </button>
-                <button onclick="setMode('move')" class="flex-shrink-0 bg-gray-600 text-white rounded-lg py-2 px-3 text-sm font-medium">
+                
+                <!-- Separador visual -->
+                <div class="flex-shrink-0 w-px h-10 bg-gray-300"></div>
+                
+                <!-- Botones de Herramientas -->
+                <button onclick="setMode('move')" id="btn-move-mobile" class="flex-shrink-0 bg-gray-600 text-white rounded-lg py-2 px-3 text-sm font-medium active:scale-95 transition">
                     ✋
                 </button>
-                <button onclick="setMode('arrow')" class="flex-shrink-0 bg-gray-600 text-white rounded-lg py-2 px-3 text-sm font-medium">
+                <button onclick="setMode('arrow')" id="btn-arrow-mobile" class="flex-shrink-0 bg-gray-600 text-white rounded-lg py-2 px-3 text-sm font-medium active:scale-95 transition">
                     ➡️
                 </button>
-                <button onclick="setMode('area')" class="flex-shrink-0 bg-gray-600 text-white rounded-lg py-2 px-3 text-sm font-medium">
+                <button onclick="setMode('area')" id="btn-area-mobile" class="flex-shrink-0 bg-gray-600 text-white rounded-lg py-2 px-3 text-sm font-medium active:scale-95 transition">
                     ⬜
                 </button>
-                <button onclick="setMode('delete')" class="flex-shrink-0 bg-red-600 text-white rounded-lg py-2 px-3 text-sm font-medium">
+                <button onclick="setMode('delete')" id="btn-delete-mobile" class="flex-shrink-0 bg-red-600 text-white rounded-lg py-2 px-3 text-sm font-medium active:scale-95 transition">
                     🗑️
                 </button>
-                <button onclick="saveFrame()" class="flex-shrink-0 bg-green-600 text-white rounded-lg py-2 px-3 text-sm font-medium">
+                
+                <!-- Separador visual -->
+                <div class="flex-shrink-0 w-px h-10 bg-gray-300"></div>
+                
+                <!-- Botones de Animación -->
+                <button onclick="saveFrame()" class="flex-shrink-0 bg-green-600 text-white rounded-lg py-2 px-3 text-sm font-medium active:scale-95 transition">
                     💾
                 </button>
-                <button onclick="playAnimation()" class="flex-shrink-0 bg-purple-600 text-white rounded-lg py-2 px-3 text-sm font-medium">
+                <button onclick="playAnimation()" class="flex-shrink-0 bg-purple-600 text-white rounded-lg py-2 px-3 text-sm font-medium active:scale-95 transition">
                     ▶️
                 </button>
-                <button onclick="showAdAndExportGIF()" class="flex-shrink-0 btn-primary text-white rounded-lg py-2 px-4 text-sm font-bold">
+                <button onclick="clearCanvas()" class="flex-shrink-0 bg-gray-500 text-white rounded-lg py-2 px-3 text-sm font-medium active:scale-95 transition">
+                    🗑️
+                </button>
+                <button onclick="showAdAndExportGIF()" class="flex-shrink-0 btn-primary text-white rounded-lg py-2 px-4 text-sm font-bold active:scale-95 transition">
                     📥 GIF
                 </button>
+            </div>
+            
+            <!-- Indicador de deslizar -->
+            <div class="text-center text-xs text-gray-400 mt-1">
+                ← Desliza para ver todos los controles →
             </div>
         </div>
 
