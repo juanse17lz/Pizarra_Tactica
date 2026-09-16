@@ -83,6 +83,30 @@ Selecciona entre 4 colores para jugadores, conos y flechas:
 ### La cancha se ve muy pequeña
 **Solución:** Maximiza la ventana del navegador o ajusta el zoom.
 
+## 💰 Monetización
+
+La aplicación incluye espacios publicitarios de Google AdSense:
+
+- **Banner horizontal** debajo de la herramienta principal
+- **Banner mid-content** entre las secciones informativas
+- **Notificación** en la esquina inferior derecha (aparece después de 5 segundos)
+- **Pop-up** al descargar GIF (se cierra automáticamente)
+
+### Configuración de AdSense
+
+El script de AdSense está configurado con el ID: `ca-pub-6606573660886956`
+
+**Para cambiar los anuncios:**
+1. Accede a tu cuenta de Google AdSense
+2. Crea nuevas unidades de anuncios
+3. Reemplaza los `data-ad-slot` en el código HTML con tus IDs
+
+**Ubicaciones de los anuncios en el código:**
+- Banner superior: Línea ~360 del `index.html`
+- Banner mid-content: Línea ~410 del `index.html`
+- Notificación: Línea ~520 del `index.html`
+- Pop-up descarga: Línea ~535 del `index.html`
+
 ## 📄 Licencia
 
 Uso libre para fines educativos y comerciales.
